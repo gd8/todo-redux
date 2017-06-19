@@ -1,34 +1,26 @@
 import React, { Component } from 'react';
 
-class TodoListItem extends Component {
-    constructor(props){
-        super(props);
-        this.state = {todo: props.todo};
-        this.onTodoToggle = this.onTodoToggle.bind(this);
-        this.onClickDelete = this.onClickDelete.bind(this);
+const TodoListItem = (props) => {
+    
+    const onTodoToggle = () => {
+        let toggledTodo = props.todo;
+        toggledTodo.done = !props.todo.done;
+        props.onTodoToggle(props.todo.id, props.todo.done  );
     }
 
-    onTodoToggle(){
-        let toggledTodo = this.state.todo;
-        toggledTodo.done = !this.state.todo.done;
-        this.setState({todo: toggledTodo});
-        this.props.onTodoToggle(this.state.todo.id, this.state.todo.done  );
+    const onClickDelete = () => {
+        props.onDelete(props.todo.id);
     }
 
-    onClickDelete() {
-        this.props.onDelete(this.state.todo.id);
-    }
-
-    render() {
-        return (
-            <li className="list-group-item">
-                <input type="checkbox" checked={this.state.todo.done} onChange={this.onTodoToggle} />
-                <label className={this.state.todo.done ? "doneTodo text-muted" : "notDoneTodo"}>
-                    {this.state.todo.description}
-                </label>
-                <a type="button" className="deleteLink" onClick={this.onClickDelete}> X </a>
-            </li>
-        );
-    }
+    return (
+        <li className="list-group-item">
+            <input type="checkbox" className="pointer" checked={props.todo.done} onChange={onTodoToggle} />
+            <label className={props.todo.done ? "doneTodo text-muted" : "notDoneTodo"}>
+                {props.todo.description}
+            </label>
+            <a type="button" className="pointer-right" onClick={onClickDelete}> 
+                <span className="fa fa-close"></span> </a>
+        </li>
+    );
 }
 export default TodoListItem;
