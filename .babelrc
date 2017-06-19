@@ -1,0 +1,11 @@
+{
+    "plugins": [
+        "transform-es2015-arrow-functions",
+        "transform-es2015-template-literals",
+        ["transform-es2015-modules-commonjs-simple", {
+            "noMangle": true
+        },
+        ["transform-class-properties", { "spec": true }]]
+    ],
+    "sourceMaps": true
+}
