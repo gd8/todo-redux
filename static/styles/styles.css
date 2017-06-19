@@ -32,6 +32,13 @@ li.list-group-item:hover > a {
     margin-bottom: 15px;
 }
 
+.disabled-link {
+    cursor: not-allowed;
+    opacity: .5;
+    pointer-events: none;
+    float: right;
+}
+
 .add-button {
     width: 100%;
     border: 1px solid #818a91;
