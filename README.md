@@ -19,7 +19,7 @@ To build Javascript using webpack and babel
 ```
 npm run build
 ```
-To start the app
+## To Start App
 ```
 npm run start
 ```
