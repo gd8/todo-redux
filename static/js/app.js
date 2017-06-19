@@ -9,17 +9,17 @@ import ApiService from './api_service';
 class App extends Component {
   constructor(props){
     super(props);
-    this.state = {todos: []};
-    this.addTodo = this.addTodo.bind(this);
-    this.toggleTodo = this.toggleTodo.bind(this);
-    this.markAllComplete = this.markAllComplete.bind(this);
-    this.onDelete = this.onDelete.bind(this);
+    this.state = {todos: [], todosLoaded: false};
   }
+  // Get todos after app renders
   componentDidMount() {
-    this.fetchTodos();
+    this.fetchTodos().then(() => {
+      this.setState({todosLoaded:true});
+    });
   }
+
   fetchTodos() {
-    ApiService.getTodos().then((result) => {
+    return ApiService.getTodos().then((result) => {
       this.setState({todos: result});
     });
   }
@@ -50,13 +50,16 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container card col-md-6 col-md-offset-3 col-xs-12">
+      <div className="main-container card col-md-6 col-md-offset-3 col-xs-12">
         <h2 className="title">Todos</h2>
         <hr />
-        <TodoInput onAddTodo={this.addTodo}/>
-        <TodoList todos={this.state.todos} onTodoToggle={this.toggleTodo} onDelete={this.onDelete}/>
+        <TodoInput onAddTodo={this.addTodo.bind(this)}/>
+        <TodoList todos={this.state.todos} onTodoToggle={this.toggleTodo.bind(this)} onDelete={this.onDelete.bind(this)}/>
         <hr />
-        <TodoFooter todos={this.state.todos} markAllComplete={this.markAllComplete}/>
+        {this.state.todosLoaded 
+          ? <TodoFooter todos={this.state.todos} markAllComplete={this.markAllComplete.bind(this)}/>
+          : null 
+        }
       </div>
     );
   }
