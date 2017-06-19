@@ -1,15 +1,15 @@
 export default class ApiService {
     static get domain_uri() {
-        return 'http://127.0.0.1:5000/';
+        return 'http://localhost:5000/';
     }
 
     static getTodos() {
         return fetch(this.domain_uri + 'todos', {method: "GET"})
             .then((response) => response.json())
             .then((json) => json.todos.map((todo) => {
-                let new_todo = todo;
-                new_todo.done = todo.done === 'true';
-                return new_todo;
+                // Need to make todo a boolean
+                todo.done = todo.done === 'true';
+                return todo;
             }))
             .catch((error) => {console.log(error)});
     }
