@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class TodoFooter extends Component {
     constructor(props) {
         super(props);
-
         this.state = {items_left: 0};
     }
 
@@ -16,9 +15,9 @@ class TodoFooter extends Component {
 
     render() {
         return (
-            <div>
-                <span>{this.countItemsLeft()} items left</span>
-                <a style={{float: "right", cursor: "pointer"}} onClick={this.props.markAllComplete}>
+            <div className="footer container">
+                <span className="text-muted">{this.countItemsLeft()} items left</span>
+                <a  className="pointer-right" onClick={this.props.markAllComplete}>
                     Mark all as complete
                 </a>
             </div>

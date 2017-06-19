@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TodoListItem from './todo_list_item';
 
 const TodoList = (props) => {
@@ -11,10 +11,11 @@ const TodoList = (props) => {
         />);
     });
     return (
-        <ul className="list-group">
+        <ul className="list-group todo-list">
             {todoItems}
         </ul>
     );
 };
+
 
 export default TodoList;
