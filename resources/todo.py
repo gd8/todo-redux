@@ -1,38 +1,67 @@
 import sqlite3
-from flask_restful import Resource, reqparse
-from db_connection import query_db
-    
+from flask import request
+from flask_restful import Resource
+from resources import db
+
 class Todo(Resource):
+    @classmethod
+    def find_by_id(cls, _id):
+        statement = "SELECT * FROM todos WHERE id = '{}'".format(_id)
+        result = db.query(statement)
+        return result
+
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('done', required=True, help="done field is required")
-        parser.add_argument('description', required=True, help="description is required")
-
-        data = parser.parse_args()
-        todo = {'done': data['done'], 'description': data['description']}
+        try:
+            data = request.form.to_dict()
+            todo = {'done': data['done'], 'description': data['description']}
+            statement = "INSERT INTO todos VALUES (NULL, '{}', '{}')".format(todo['done'], todo['description'])
+        except:
+            return {'message': 'failed to parse request'}, 500, {'Access-Control-Allow-Origin': '*'}
+        try:
+            result = db.modify(statement)
+        except:
+            return {'message': 'failed to insert item into DB'}, 500, {'Access-Control-Allow-Origin': '*'}
         
-        query = "INSERT INTO todos VALUES (NULL, '{}', '{}')".format(todo['done'], todo['description'])
-        result = query_db(query)
+        return todo, 201, {'Access-Control-Allow-Origin': '*'}
 
-        return todo
+    def patch(self):
+        try:
+            data = request.form.to_dict()
+            todo_id = data['id']
+            todo_status = data['done']
+        except:
+            return {'message': 'failed to parse request'}, 500, {'Access-Control-Allow-Origin': '*'}
 
-    def put(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('done', required=True, help="done field is required")
-        parser.add_argument('id', required=True, help="id is required")
+        if not Todo.find_by_id(todo_id):
+            return {'message': 'Todo not found'}, 404, {'Access-Control-Allow-Origin': '*'}
+         
+        statement = "UPDATE todos SET done = '{}' WHERE id = '{}'".format(todo_status, todo_id)
+        try:
+            result = db.modify(statement)
+        except:
+            return {'message': 'failed to insert item into DB'}, 500, {'Access-Control-Allow-Origin': '*'}
 
-        data = parser.parse_args()        
-        query = "UPDATE todos SET done = '{}' WHERE id = '{}'".format(data['done'], data['id'])
-        result = query_db(query)
-
-        return {'message': 'Todo item successfully updated.'}
+        return {'message': 'Todo item successfully updated.'}, 200, {'Access-Control-Allow-Origin': '*'}
 
     def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', required=True, help="id is required")
+        try:
+            data = request.form.to_dict()
+            todo_id = data['id']
+        except:
+            return {'message': 'failed to parse request'}, 500, {'Access-Control-Allow-Origin': '*'}
 
-        data = parser.parse_args()
-        
-        query = "DELETE FROM todos WHERE ID = '{}'".format(data['id'])
-        result = query_db(query)
-        return {'message': 'Todo item successfully deleted.'}
+        if not Todo.find_by_id(data['id']):
+            return {'message': 'Todo not found'}, 404, {'Access-Control-Allow-Origin': '*'}
+
+        statement = "DELETE FROM todos WHERE ID = '{}'".format(todo_id)
+        try:
+            result = db.modify(statement)
+        except:
+            return {'message': 'failed to insert item into DB'}, 500, {'Access-Control-Allow-Origin': '*'}
+
+        return {'message': 'Todo item successfully deleted.'}, 200, {'Access-Control-Allow-Origin': '*'}
+
+    def options (self):
+        return {'Allow' : 'POST' }, 200, \
+        { 'Access-Control-Allow-Origin': '*', \
+        'Access-Control-Allow-Methods' : 'POST,PATCH,DELETE,GET' }
