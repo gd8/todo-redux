@@ -1,0 +1,43 @@
+body {
+    background-color: #f6f5f5;
+}
+
+hr {
+    border-top:1px dashed #818a91;
+}
+
+button {
+    width: 100%;
+    border: 1px solid #818a91;
+    border-radius: 5px;
+    background: -webkit-linear-gradient(top, #f5f5f5 0%,#ccc 100%);
+}
+
+li { background: white; }
+li:nth-child(odd) { background: lightgray; }
+
+.title {
+    margin: 50px;
+    text-align: center;
+}
+.container {
+    margin-top: 80px;
+}
+.todo-input {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.doneTodo {
+    margin-left: 5px;
+    text-decoration: line-through;
+}
+
+.notDoneTodo {
+    margin-left: 5px;
+}
+
+.deleteLink {
+    float: right;
+    cursor: pointer;
+}
