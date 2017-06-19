@@ -8,25 +8,19 @@ class TodoList(Resource):
         try:
             result = db.query(select_query)
         except:
-            return {'message': 'failed to insert item into DB'}, 500, {'Access-Control-Allow-Origin': '*'}
+            return {'message': 'failed to insert item into DB'}, 500
         
         todos = []
         for row in result:
             todos.append({'id': row[0], 'done': row[1], 'description': row[2]})
 
-        return {'todos': todos}, 200, {'Access-Control-Allow-Origin': '*'}
+        return {'todos': todos}, 200
 
     def patch(self):
         update_query = "UPDATE todos SET done = 'true'"
         try:
             result = db.modify(update_query)
         except:
-            return {'message': 'failed to insert item into DB'}, 500, {'Access-Control-Allow-Origin': '*'}
+            return {'message': 'failed to insert item into DB'}, 500
 
-        return {'message': 'Todo items successfully updated.'}, 200, {'Access-Control-Allow-Origin': '*'}
-
-    def options (self):
-        return {'Allow' : 'PATCH' }, 200, \
-        { 'Access-Control-Allow-Origin': '*', \
-        'Access-Control-Allow-Methods' : 'PATCH,GET' }
-
+        return {'message': 'Todo items successfully updated.'}, 200
