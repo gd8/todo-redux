@@ -1,32 +1,25 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import _ from 'lodash';
+
+import { updateTodos } from '../actions';
 
 class TodoFooter extends Component {
     constructor(props) {
         super(props);
-        this.state = {items_left: 0};
+        this.markAllComplete = this.markAllComplete.bind(this);
     }
 
-    componentDidMount() {
-        this.countItemsLeft(this.props.todos);
+    markAllComplete() {
+        this.props.updateTodos();
     }
-
-    componentWillReceiveProps(nextProps) {
-        this.countItemsLeft(nextProps.todos);
-    }
-
-    countItemsLeft(todos) {
-        let items_left = todos.reduce((items_left, todo) =>{
-            return items_left + (todo.done ? 0 : 1);
-        }, 0);
-        this.setState({items_left: items_left});
-    }
-
+    
     render() {
         return (
             <div className="footer container">
-                <span className="text-muted">{this.state.items_left} items left</span>
-                <a  className={this.state.items_left == 0 ? "disabled-link" : "pointer-right"} 
-                    onClick={this.props.markAllComplete}>
+                <span className="text-muted">{this.props.items_left} items left</span>
+                <a  className={this.props.items_left == 0 ? "disabled-link" : "pointer-right"} 
+                    onClick={this.markAllComplete}>
                     Mark all as complete
                 </a>
             </div>
@@ -34,4 +27,12 @@ class TodoFooter extends Component {
     }
 }
 
-export default TodoFooter;
+function mapStateToProps(state) {
+    return {
+        items_left: _.reduce(state.todos, (items_left, todo) => {
+                            return items_left + (todo.done ? 0 : 1);
+                    }, 0)
+    }
+}
+
+export default connect(mapStateToProps, { updateTodos })(TodoFooter);

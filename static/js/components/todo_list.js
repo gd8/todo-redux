@@ -1,21 +1,32 @@
+import _ from 'lodash';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+
+import { fetchTodos } from '../actions';
 import TodoListItem from './todo_list_item';
 
-const TodoList = (props) => {
-    const todoItems = props.todos.map((todo, index) => {
-        return (<TodoListItem 
-            key={todo.id}
-            todo={todo} 
-            onTodoToggle={props.onTodoToggle}
-            onDelete={props.onDelete}
-        />);
-    });
-    return (
-        <ul className="list-group todo-list">
-            {todoItems}
-        </ul>
-    );
+class TodoList extends Component {
+    componentDidMount() {
+        this.props.fetchTodos();
+    }
+
+    renderTodos(){
+        return _.map(this.props.todos, (todo) => {
+            return (<TodoListItem  key={todo.id} todo={todo} />);
+        });
+    }
+
+    render() {
+        return (
+            <ul className="list-group todo-list">
+                {this.renderTodos()}
+            </ul>
+        );
+    }
 };
 
+function mapStatesToProps(state) {
+    return { todos: state.todos};
+}
 
-export default TodoList;
+export default connect(mapStatesToProps, {fetchTodos})(TodoList);

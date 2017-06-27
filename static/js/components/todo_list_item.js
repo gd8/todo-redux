@@ -1,26 +1,49 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
-const TodoListItem = (props) => {
-    
-    const onTodoToggle = () => {
-        let toggledTodo = props.todo;
-        toggledTodo.done = !props.todo.done;
-        props.onTodoToggle(props.todo.id, props.todo.done  );
+import { updateTodo, deleteTodo } from '../actions';
+
+class TodoListItem extends Component {
+    constructor(props) {
+        super(props);
+        this.onTodoToggle = this.onTodoToggle.bind(this);
+        this.onClickDelete = this.onClickDelete.bind(this);
     }
-
-    const onClickDelete = () => {
-        props.onDelete(props.todo.id);
+    onTodoToggle() {
+        // NOTE: toggling todo status with bitwise toggle
+        const {todo} = this.props;
+        const new_todo = {
+            id: todo.id,
+            done: todo.done ^= 1
+        };
+        this.props.updateTodo(new_todo);
     }
-
-    return (
-        <li className="list-group-item">
-            <input type="checkbox" className="pointer" checked={props.todo.done} onChange={onTodoToggle} />
-            <label className={props.todo.done ? "doneTodo text-muted" : "notDoneTodo"}>
-                {props.todo.description}
-            </label>
-            <a type="button" className="pointer-right" onClick={onClickDelete}> 
-                <span className="fa fa-close"></span> </a>
-        </li>
-    );
+    onClickDelete() {
+        this.props.deleteTodo(this.props.todo.id);
+    }
+    render() {
+        const { todo } = this.props;
+        return (
+            <li className="list-group-item">
+                <input type="checkbox" 
+                       className="pointer" 
+                       checked={todo.done} 
+                       onChange={this.onTodoToggle} />
+                <label className={todo.done ? "doneTodo text-muted" : "notDoneTodo"}>
+                    {todo.description}
+                </label>
+                <a type="button" className="pointer-right" onClick={this.onClickDelete}> 
+                    <span className="fa fa-close"></span> 
+                </a>
+            </li>
+        )
+    }
 }
-export default TodoListItem;
+
+function mapStateToProps(state, ownProps){
+    return {
+        todo: ownProps.todo
+    };
+}
+
+export default connect(mapStateToProps, {updateTodo, deleteTodo})(TodoListItem);
