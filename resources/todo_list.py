@@ -8,7 +8,7 @@ class TodoList(Resource):
         try:
             result = db.query(select_query)
         except:
-            return {'message': 'failed to insert item into DB'}, 500
+            return {'message': 'failed to get todos from DB'}, 500
         
         todos = []
         for row in result:
@@ -17,10 +17,10 @@ class TodoList(Resource):
         return {'todos': todos}, 200
 
     def patch(self):
-        update_query = "UPDATE todos SET done = 'true'"
+        update_query = "UPDATE todos SET done = 1"
         try:
             result = db.modify(update_query)
         except:
-            return {'message': 'failed to insert item into DB'}, 500
+            return {'message': 'failed to update DB'}, 500
 
-        return {'message': 'Todo items successfully updated.'}, 200
+        return self.get()
