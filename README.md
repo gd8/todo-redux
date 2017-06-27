@@ -1,5 +1,5 @@
 # todo-app
-A todo list app using flask and react
+A redux on the flask/react todo app that uses redux
 
 ## Backend Setup
 To install backend dependencies (whether in virtual environment or globally)
