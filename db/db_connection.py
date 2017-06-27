@@ -22,7 +22,7 @@ class DBConnection(object):
         self.cursor = self.connection.cursor()
         self.cursor.execute(statement)
         self.connection.commit()
-        return self.cursor.rowcount 
+        return self.cursor.lastrowid 
 
     def __del__(self):
         if(self.connection):
